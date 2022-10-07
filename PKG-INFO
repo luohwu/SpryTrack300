@@ -1,0 +1,73 @@
+Metadata-Version: 2.1
+Name: atracsys
+Version: 4.7.0
+Summary: The atracsys SDK wrapper for the fusionTrack and the spryTrack
+Home-page: https://www.atracsys-measurement.com/
+Author: Atracsys
+Author-email: support@atracsys.com
+License: atracsys
+Description: # Atracsys fusionTrack and spryTrack Wrapper Package
+        
+        This package allows you to interact with Atracsys fusionTrack and spryTrack systems.
+        
+        ## Installation
+        
+        In order to install this package, you will need:
+        - Cmake 3.10 at least.
+        - Visual Studio 2015 or greater on Windows (since the sources need c++11 full support).
+        - gcc 5 on Linux (not tested on more recent releases of gcc).
+        - git available on the command line (on Windows, please use git for Windows).
+        - Atracsys SDK corresponding to the version of the python package.
+        
+        During the installation, the wrapper will get compiled against the fusionTrack SDK, the spryTrack SDK
+        or both depending on the packages installed on your system.
+        
+        On Linux, the installation checks for the environment variables `ATRACSYS_FTK_HOME` and `ATRACSYS_STK_HOME`
+        to find out what SDK is installed (and where they are installed). Please make these variables point to 
+        the installation folder of your SDK(s).
+        
+        ## Usage
+        
+        The python API exported by this packages tries to be as closed as possible from the Atracsys `C` and `C++` APIs.
+        In order to get started, you could retrieve frames using the following code:
+        
+        ```python
+        import atracsys.ftk as tracker_sdk
+        
+        def exit_with_error( error, tracking_system ):
+          display(error)
+          errors_dict = {}
+          if tracking_system.get_last_error(errors_dict) == tracker_sdk.Status.Ok:
+            for level in ['errors', 'warnings', 'messages']:
+                if level in errors_dict:
+                    display(errors_dict[level])
+          exit(1)
+        
+        tracking_system = tracker_sdk.TrackingSystem()
+        
+        if tracking_system.initialise() != tracker_sdk.Status.Ok:
+           exit_with_error("Error, can't initialise the atracsys SDK api.", tracking_system)
+        
+        if tracking_system.enumerate_devices() != tracker_sdk.Status.Ok:
+           exit_with_error("Error, can't enumerate devices.", tracking_system)
+        
+        frame = tracker_sdk.FrameData()
+        
+        if tracking_system.create_frame(False, 10, 20, 20, 10) != tracker_sdk.Status.Ok:
+            exit_with_error("Error, can't create frame object.", tracking_system)
+            
+        print("Tracker with serial ID {0} detected".format(hex(tracking_system.get_enumerated_devices()[0].serial_number)))
+        
+        tracking_system.get_last_frame(100, frame)
+        ```
+        
+        ## Help
+        
+        The full documentation is in the doc/python folder of your SDK(s) installation.
+Platform: Windows
+Platform: Linux
+Platform: Mac
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Description-Content-Type: text/markdown
+Provides-Extra: testing
