@@ -66,7 +66,7 @@ def animate(i):
     x += 1
     tracker.get_last_frame(frame)
 
-    marker_data = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
+    marker_data = [(0, 0, 0), (0, 0, 0)]
 
     for marker in frame.markers:
         if not marker.geometry_id in markers_indexes:
@@ -78,7 +78,7 @@ def animate(i):
                 marker.position[0], marker.position[1], marker.position[2])
 
     current_frame_data = (
-        x, marker_data[0], marker_data[1], marker_data[2], marker_data[3])
+        x, marker_data[0], marker_data[1])
 
     data.append(current_frame_data)
     ax[0, 0].relim()
@@ -98,13 +98,19 @@ def animate(i):
             data[x][i+1][2] for x in range(0, len(data))]
         axis_z_lines[i].set_data(axis_z_data)
 
+    # print real-time values
+    # marker_data[0][0]:x, marker_data[0][1]:y, marker_data[0][2]:z
+    ax[0, 0].title.set_text(f"Axis x {marker_data[0][0]:.2f}")
+    ax[0, 1].title.set_text(f"Axis y {marker_data[0][1]:.2f}")
+    ax[1, 0].title.set_text(f"Axis z {marker_data[0][2]:.2f}")
+
 
 
 x = 0
 fig, ax = plt.subplots(2, 2)
 ax[-1, -1].axis('off')
-data = deque([(x, (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0))], maxlen=50)
-max_number_of_tracked_markers = 4
+data = deque([(x, (0, 0, 0), (0, 0, 0))], maxlen=50)
+max_number_of_tracked_markers = 2
 axis_x_lines = []
 axis_y_lines = []
 axis_z_lines = []
