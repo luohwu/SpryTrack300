@@ -53,6 +53,11 @@ for geometry in ['geometry110.ini']:
     if tracker.set_geometry(os.path.join(geometry_path, geometry)) != tracking_sdk.Status.Ok:
         exit_with_error("Error, can't create frame object.", tracker)
 
+# Important!!!!!!!!!, the following option values might change in new environment, just check if the device is working or not using the demo app first
+tracker.set_int_option(10,2173) # option 10, is Image Compression Threshold
+tracker.set_int_option(11,110) # option 11, is Image Integration Time, proper values can be found from DEMO
+
+options=tracker.get_enumerated_options()
 
 def animate(i):
     global x
@@ -92,6 +97,7 @@ def animate(i):
         axis_z_data = [data[x][0] for x in range(0, len(data))], [
             data[x][i+1][2] for x in range(0, len(data))]
         axis_z_lines[i].set_data(axis_z_data)
+
 
 
 x = 0
